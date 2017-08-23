@@ -13,38 +13,29 @@ api = Api(application,
           doc='/api')
 
 message_model = api.model('MessageModel', {
-    'message' : fields.String,
+    'message' : fields.String(description='Message to deliver'),
 })
 
-hello_model = api.inherit('HelloModel', message_model, {
-    'message' : fields.String('Hello'),
-    'name': fields.String
-})
 
-@api.route('/hello')
 @api.route('/hello/<name>')
 class HelloWorld(Resource):
-    @api.marshal_with(hello_model)
-    @api.doc(params={'name': 'Name to say hello to. Defaults to World'})
-    def get(self, name='World'):
+    @api.marshal_with(message_model)
+    def get(self, name):
         return {
-            'message': 'hello',
-            'name': name
+            'message': 'Hello {0}'.format(name),
         }
-    @api.marshal_with(hello_model)
-    @api.doc(params={'name': 'Name to say hello to'},
-             responses={201: "Created"})
+
+    @api.doc(responses={201: "Created"})
+    @api.marshal_with(message_model)
     def post(self, name):
-        if name:
-            return {
-                'message': 'hello',
-                'name' : name
-            }, 201
-        else:
+        if name == 'This':
             raise BadRequest('No name')
+        else:
+            return {
+                'message': 'Hello {0}'.format(name)
+            }, 201
 
 @api.route('/message/<msg>')
-
 class Message(Resource):
     @api.marshal_with(message_model)
     def get(self, msg):
