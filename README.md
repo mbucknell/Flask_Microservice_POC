@@ -1,6 +1,6 @@
 # Flask_Microservice_POC
 
-This project can be build by creating a virtualenv for python 3 and then installing the required packages listed in
+This project can be built by creating a virtualenv for python 3 and then installing the required packages listed in
 requirements.txt as follows:
 ```
 % virtualenv --python=python3 env
